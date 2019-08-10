@@ -1,8 +1,6 @@
-package com.leibro;
+package com.leibro.http;
 
 
-import com.leibro.http.HttpMethod;
-import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;

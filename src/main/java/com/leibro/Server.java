@@ -1,5 +1,8 @@
 package com.leibro;
 
+import com.leibro.http.HttpRequest;
+import com.leibro.http.HttpResponse;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,12 +19,15 @@ public class Server {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(80);
+            HttpRequestHandler requestHandler = new HttpRequestHandler();
+            HttpResponseHandler responseHandler = new HttpResponseHandler();
             for(;;) {
                 Socket socket = serverSocket.accept();
-                HttpRequest httpRequest = HttpRequestHandler.parseHttpRequest(socket.getInputStream());
-                OutputStream out = socket.getOutputStream();
+                HttpRequest httpRequest = requestHandler.parseHttpRequest(socket.getInputStream());
                 if(httpRequest != null) {
-                    out.write(httpRequest.toString().getBytes());
+                    HttpResponse httpResponse = requestHandler.handleRequest(httpRequest);
+                    OutputStream out = socket.getOutputStream();
+                    out.write(responseHandler.parseHttpResponse(httpResponse).getBytes("utf-8"));
                     out.flush();
                 }
                 socket.close();
